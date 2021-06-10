@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { queryClient } from './apis/constants'
 
 const baseUrl = (document.getElementsByTagName('base')[0] || {}).href;
-const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>

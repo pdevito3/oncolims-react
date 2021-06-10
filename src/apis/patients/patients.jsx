@@ -1,10 +1,11 @@
 ﻿import axios from 'axios';
 import { useQuery } from 'react-query';
-import { patientsBaseUrl } from '../constants'
+import { patientsBaseUrl, queryClient } from '../constants'
 
 const patientKeys = {
-    patients: (pageNumber) => ['patients', pageNumber],
-    patient: (id) => [...patientKeys.patients, id]
+    patients: (pageNumber) => ['patients', 'page', pageNumber],
+    // patient: (id) => [...patientKeys.patients, id]
+    patient: (id) => ['patient', id]
 }
 
 const config = {
@@ -33,11 +34,24 @@ const fetchPatients = async (pageNumber = 1, pageSize = 6) => {
     return res.data;
 }
 
+// TODO Update to infinite query to fetch next page automatically
 export function usePatients(pageNumber) {
     return useQuery(
         [patientKeys.patients, { pageNumber }],
         async () => fetchPatients(pageNumber),
         {
+            keepPreviousData: true,
+            staleTime: Infinity,
+            cacheTime: Infinity,
+            onSuccess: patients => {
+                // add individual patients to cache
+                for (const patient of patients.data) {
+                  queryClient.setQueryData(
+                    patientKeys.patient(patient.patientId),
+                    patient
+                  )
+                }
+            }
         }
     )
 }
