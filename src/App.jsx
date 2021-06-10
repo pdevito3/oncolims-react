@@ -3,8 +3,9 @@ import { usePatients, pagination } from './apis/patients/patients'
 import { PencilAltIcon } from '@heroicons/react/outline'
 
 function App() {
-  const {data: patients, isLoading, isSuccess } = usePatients();
-  
+  const [pageNumber, setPageNumber] = useState(1);
+  const {data: patients, isLoading, isSuccess } = usePatients(pageNumber);
+
   return (
     <>
     {
@@ -85,22 +86,22 @@ function App() {
           <div className="flex-1 flex justify-between sm:justify-end">
             {
               pagination && pagination.hasPrevious && (
-                <a
-                  href="#"
+                <button
+                  onClick={() => setPageNumber(pageNumber - 1)}
                   className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                   Previous
-                </a>
+                </button>
               )
             }
             {
               pagination && pagination.hasNext && (
-                <a
-                  href="#"
-                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                <button
+                  onClick={() => setPageNumber(pageNumber + 1)}
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                   Next
-                </a>
+                </button>
               )
             }
           </div>

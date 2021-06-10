@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { patientsBaseUrl } from '../constants'
 
 const patientKeys = {
-    patients: ['patients'],
+    patients: (pageNumber) => ['patients', pageNumber],
     patient: (id) => [...patientKeys.patients, id]
 }
 
@@ -25,20 +25,18 @@ export function usePatient(patientId) {
 }
 
 
-export let hasNextPage = false;
-export let hasPreviousPage = false;
 export let pagination;
-const fetchPatients = async (pageSize = 6, pageNumber = 1) => {
+const fetchPatients = async (pageNumber = 1, pageSize = 6) => {
     let res = await axios.get(`${patientsBaseUrl}?pagesize=${pageSize}&pageNumber=${pageNumber}`, config);
     pagination = JSON.parse(res.headers["x-pagination"]);
 
     return res.data;
 }
 
-export function usePatients() {
+export function usePatients(pageNumber) {
     return useQuery(
-        patientKeys.patients,
-        async () => fetchPatients(),
+        [patientKeys.patients, { pageNumber }],
+        async () => fetchPatients(pageNumber),
         {
         }
     )
