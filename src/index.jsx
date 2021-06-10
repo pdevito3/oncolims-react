@@ -1,11 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const baseUrl = (document.getElementsByTagName('base')[0] || {}).href;
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter basename={baseUrl}>
+      <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools initialIsOpen={true} />
+      </QueryClientProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root'),
 );

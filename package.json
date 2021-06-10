@@ -7,8 +7,10 @@
     "lint": "prettier --check \"src/**/*.{js,jsx}\""
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@snowpack/plugin-dotenv": "^2.1.0",
@@ -22,6 +24,7 @@
     "chai": "^4.3.4",
     "postcss": "^7",
     "prettier": "^2.2.1",
+    "react-query": "^3.16.1",
     "snowpack": "^3.3.7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }

@@ -1,5 +1,4 @@
 module.exports = {
-  mode: 'jit',
   purge: [
     './public/**/*.html',
     './src/**/*.{js,jsx,ts,tsx}',
@@ -9,7 +8,9 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      display: ['group-focus', 'group-hover'],
+    }
   },
   plugins: [],
 }
