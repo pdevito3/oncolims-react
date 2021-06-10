@@ -14,7 +14,7 @@ ReactDOM.render(
     <BrowserRouter basename={baseUrl}>
       <QueryClientProvider client={queryClient}>
           <App />
-          <ReactQueryDevtools initialIsOpen={true} />
+          <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>,

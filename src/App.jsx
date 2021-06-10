@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { usePatients } from './apis/patients/patients'
+import { usePatients, pagination } from './apis/patients/patients'
 import { PencilAltIcon } from '@heroicons/react/outline'
 
 function App() {
-  const {data: patients, isLoading, isSuccess} = usePatients();
+  const {data: patients, isLoading, isSuccess } = usePatients();
   
   return (
     <>
@@ -66,6 +66,45 @@ function App() {
             </div>
           </div>
         </div>
+
+        {/* TODO - abstract out to a pagination component */}
+        <nav
+          className="bg-white px-4 py-3 flex items-center justify-between sm:px-6"
+          aria-label="Pagination"
+        >
+          {
+            pagination && (
+              <div className="hidden sm:block">
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">{pagination.currentStartIndex}</span> to <span className="font-medium">{pagination.currentEndIndex}</span> of{' '}
+                  <span className="font-medium">{pagination.totalCount}</span> results
+                </p>
+              </div>
+            )
+          }
+          <div className="flex-1 flex justify-between sm:justify-end">
+            {
+              pagination && pagination.hasPrevious && (
+                <a
+                  href="#"
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Previous
+                </a>
+              )
+            }
+            {
+              pagination && pagination.hasNext && (
+                <a
+                  href="#"
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Next
+                </a>
+              )
+            }
+          </div>
+        </nav>
       </div>
     }
   </>

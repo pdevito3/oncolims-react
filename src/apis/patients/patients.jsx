@@ -1,7 +1,6 @@
 ﻿import axios from 'axios';
 import { useQuery } from 'react-query';
-
-const baseUrl = "https://localhost:1200/api";
+import { patientsBaseUrl } from '../constants'
 
 const patientKeys = {
     patients: ['patients'],
@@ -13,7 +12,7 @@ const config = {
 }
 
 const fetchPatient = async (patientId) =>
-    axios.get(`/patients/${patientId}`, config)
+    axios.get(`${patientsBaseUrl}/${patientId}`, config)
         .then((res) => res.data);
 
 export function usePatient(patientId) {
@@ -25,9 +24,16 @@ export function usePatient(patientId) {
     )
 }
 
-const fetchPatients = async () =>
-    axios.get(`${baseUrl}/patients`, config)
-        .then((res) => res.data);
+
+export let hasNextPage = false;
+export let hasPreviousPage = false;
+export let pagination;
+const fetchPatients = async (pageSize = 6, pageNumber = 1) => {
+    let res = await axios.get(`${patientsBaseUrl}?pagesize=${pageSize}&pageNumber=${pageNumber}`, config);
+    pagination = JSON.parse(res.headers["x-pagination"]);
+
+    return res.data;
+}
 
 export function usePatients() {
     return useQuery(
