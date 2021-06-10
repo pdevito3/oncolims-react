@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { usePatients, pagination } from './apis/patients/patients'
 import { PencilAltIcon } from '@heroicons/react/outline'
+import Dialog from './components/Dialog';
 
 function App() {
+  //TODO Change pagenumber to XSTATE
   const [pageNumber, setPageNumber] = useState(1);
-  const {data: patients, isLoading, isSuccess } = usePatients(pageNumber);
+  const {data: patients, isLoading, isFetching, isSuccess } = usePatients(pageNumber);
+
+  //TODO Change modal open to XSTATE
+  let [isOpen, setIsOpen] = useState(false);
+
 
   return (
     <>
@@ -49,9 +55,12 @@ function App() {
                   </thead>
                   <tbody>
                     {patients.data.map((patient) => (
-                      <tr key={patient.patientId} className="group">
+                      <tr key={patient.patientId} className="group bg-white even:bg-gray-50">
                         <td className="py-4 whitespace-nowrap text-left text-sm font-medium flex items-center justify-center">
-                          <button className="hidden text-indigo-600 hover:text-indigo-900 group-hover:block">
+                          <button 
+                            onClick={() => setIsOpen(true)}
+                            className="hidden text-indigo-600 hover:text-indigo-900 group-hover:block"
+                          >
                               <PencilAltIcon className="w-5 h-5" /> 
                           </button>
                         </td>
@@ -106,6 +115,8 @@ function App() {
             }
           </div>
         </nav>
+      
+        <Dialog isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     }
   </>

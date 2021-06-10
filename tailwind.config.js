@@ -10,6 +10,7 @@ module.exports = {
   variants: {
     extend: {
       display: ['group-focus', 'group-hover'],
+      backgroundColor: ['even'],
     }
   },
   plugins: [],
