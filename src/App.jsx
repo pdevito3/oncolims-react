@@ -1,16 +1,18 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { usePatients, pagination } from './apis/patients/patients'
-import { PencilAltIcon } from '@heroicons/react/outline'
+import useCreatePatient from './apis/patients/useCreatePatient'
+import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
 import Dialog from './components/Dialog';
+import PatientForm from './components/PatientForm';
 
 function App() {
   //TODO Change pagenumber to XSTATE
   const [pageNumber, setPageNumber] = useState(1);
-  const {data: patients, isLoading, isFetching, isSuccess } = usePatients(pageNumber);
+  const {data: patients, isSuccess } = usePatients(pageNumber);
+  const createPatient = useCreatePatient();  
 
   //TODO Change modal open to XSTATE
   let [isOpen, setIsOpen] = useState(false);
-
 
   return (
     <>
@@ -21,6 +23,17 @@ function App() {
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
               <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <div className=" group w-full bg-emerald-500 h-10 px-6 flex items-center justify-between">
+                  <p className="font-semibold text-white font-lg">
+                    Patients
+                  </p>
+                  <button 
+                    onClick={() => setIsOpen(true)}
+                    className="hidden text-white border border-white rounded hover:bg-white hover:text-emerald-500 transition-all duration-150 ease-in group-hover:block"
+                  >
+                      <PlusIcon className="w-4 h-4" />
+                  </button>
+                </div>
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
@@ -58,8 +71,8 @@ function App() {
                       <tr key={patient.patientId} className="group bg-white even:bg-gray-50">
                         <td className="py-4 whitespace-nowrap text-left text-sm font-medium flex items-center justify-center">
                           <button 
-                            onClick={() => setIsOpen(true)}
-                            className="hidden text-indigo-600 hover:text-indigo-900 group-hover:block"
+                            // onClick={() => setIsOpen(true)}
+                            className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block"
                           >
                               <PencilAltIcon className="w-5 h-5" /> 
                           </button>
@@ -116,7 +129,22 @@ function App() {
           </div>
         </nav>
       
-        <Dialog isOpen={isOpen} setIsOpen={setIsOpen} />
+        <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+          <PatientForm 
+            onSubmit={createPatient.mutate}
+            clearOnSubmit
+            setIsOpen={setIsOpen}
+            submitText={
+              createPatient.isLoading
+                ? 'Saving...'
+                : createPatient.isError
+                ? 'Error!'
+                : createPatient.isSuccess
+                ? 'Saved!'
+                : 'Create Patient'
+            }
+          />          
+        </Dialog>
       </div>
     }
   </>

@@ -1,12 +1,6 @@
 ﻿import axios from 'axios';
 import { useQuery } from 'react-query';
-import { patientsBaseUrl, queryClient } from '../constants'
-
-const patientKeys = {
-    patients: (pageNumber) => ['patients', 'page', pageNumber],
-    // patient: (id) => [...patientKeys.patients, id]
-    patient: (id) => ['patient', id]
-}
+import { patientsBaseUrl, queryClient, patientKeys } from '../constants'
 
 const config = {
     headers: {}
@@ -29,6 +23,8 @@ export function usePatient(patientId) {
 export let pagination;
 const fetchPatients = async (pageNumber = 1, pageSize = 6) => {
     let res = await axios.get(`${patientsBaseUrl}?pagesize=${pageSize}&pageNumber=${pageNumber}`, config);
+
+    // TODO move pagination to DTO body in api to cache the data
     pagination = JSON.parse(res.headers["x-pagination"]);
 
     return res.data;
@@ -37,7 +33,7 @@ const fetchPatients = async (pageNumber = 1, pageSize = 6) => {
 // TODO Update to infinite query to fetch next page automatically
 export function usePatients(pageNumber) {
     return useQuery(
-        [patientKeys.patients, { pageNumber }],
+        patientKeys.patients(pageNumber),
         async () => fetchPatients(pageNumber),
         {
             keepPreviousData: true,

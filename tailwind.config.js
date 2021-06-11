@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   purge: [
     './public/**/*.html',
@@ -5,7 +7,12 @@ module.exports = {
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        violet: colors.violet,
+        emerald: colors.emerald,
+      }
+    },
   },
   variants: {
     extend: {
@@ -13,5 +20,7 @@ module.exports = {
       backgroundColor: ['even'],
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
