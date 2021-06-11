@@ -25,7 +25,11 @@ export default function useCreatePost() {
 
         // return () => queryClient.setQueryData(['patients','page'], oldPosts)
       },
-      onError: (error, values, rollback) => rollback(),
+      onError: (error, values, rollback) => {
+        console.log(error.response.status)
+        console.log(error.response.data.errors)
+        // rollback()
+      },
       onSuccess: () => queryClient.invalidateQueries(['patients','page']),
     }
   )

@@ -1,4 +1,6 @@
 import React from 'react'
+import classNames from 'classnames'
+import { ExclamationCircleIcon } from '@heroicons/react/solid'
 
 const defaultFormValues = {
   firstName: null,
@@ -27,6 +29,8 @@ function PatientForm({
     setValues(initialValues)
   }, [initialValues])
   
+  const isValid = false;
+
   return (
     <div>      
       <div>
@@ -42,9 +46,9 @@ function PatientForm({
           >
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                First name
+                First Name
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
+              <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
                 <input
                   type="text"
                   name="first_name"
@@ -52,8 +56,19 @@ function PatientForm({
                   autoComplete="given-name"
                   onChange={(e) => setValue('firstName', e.target.value)}
                   value={values.firstName}
-                  className="max-w-lg block w-full shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  className={classNames(
+                    "max-w-lg block w-full shadow-sm sm:max-w-xs sm:text-sm rounded-md", 
+                    {"focus:ring-emerald-500 focus:border-emerald-500 border-gray-300": isValid}, 
+                    {"border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500": !isValid})
+                  }
+                  aria-invalid={!isValid}
+                  aria-describedby={!isValid ? "invalid-first-name" : null}
                 />
+                { !isValid && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                  </div>
+                )}
               </div>
             </div>
           </form>
