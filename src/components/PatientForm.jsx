@@ -8,8 +8,9 @@ import * as yup from "yup";
 const defaultFormValues = {
   firstName: null,
 }
-const schema = yup.object().shape({
-  firstName: yup.string().required(),
+
+const SignupSchema = yup.object().shape({
+  firstName: yup.string().required().label('First name')
 });
 
 function PatientForm({
@@ -19,8 +20,12 @@ function PatientForm({
   clearOnSubmit,
   setIsOpen
 }) {  
-  const { register, handleSubmit, formState: { errors }} = useForm({
-    resolver: yupResolver(schema)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(SignupSchema)
   });
   const [values, setValues] = React.useState(initialValues)
   const setValue = (field, value) =>
@@ -30,14 +35,14 @@ function PatientForm({
     if (clearOnSubmit) {
       setValues(defaultFormValues)
     }
-    e.preventDefault()
+    // e.preventDefault()
     onSubmit(values)
   }
 
   React.useEffect(() => {
     setValues(initialValues)
   }, [initialValues])
-console.log(errors)
+  
   return (
     <div>      
       <div>
@@ -49,34 +54,36 @@ console.log(errors)
 
           <form className="mt-6 sm:mt-5" 
             onSubmit={handleSubmit(internalHandleSubmit)} 
-            onKeyDown={(e) => {if(e.key === "Enter") internalHandleSubmit(e)}} 
+            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(internalHandleSubmit(e))}} 
           >
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                 First Name
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                <input
-                  type="text"
-                  {...register("firstName")}
-                  id="firstName"
-                  autoComplete="given-name"
-                  onChange={(e) => setValue('firstName', e.target.value)}
-                  value={values.firstName}
-                  className={classNames(
-                    "max-w-lg block w-full shadow-sm sm:max-w-xs sm:text-sm rounded-md", 
-                    {"focus:ring-emerald-500 focus:border-emerald-500 border-gray-300": !errors?.firstName}, 
-                    {"border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500": errors?.firstName})
-                  }
-                  aria-invalid={errors?.firstName}
-                  aria-describedby={errors?.firstName ? "invalid-first-name" : null}
-                />
-                { errors?.firstName && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-                  </div>
-                )}
-                {errors.firstName && <p>{errors.firstName.message}</p>}
+              <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <div className="relative">
+                  <input
+                    type="text"
+                    {...register("firstName")}
+                    id="first-name"
+                    autoComplete="given-name"
+                    onChange={(e) => setValue('firstName', e.target.value)}
+                    value={values.firstName}
+                    className={classNames(
+                      "max-w-lg block w-full shadow-sm sm:max-w-xs sm:text-sm rounded-md", 
+                      {"focus:ring-emerald-500 focus:border-emerald-500 border-gray-300": !errors.firstName}, 
+                      {"border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500": errors.firstName})
+                    }
+                    aria-invalid={errors?.firstName}
+                    aria-describedby={errors?.firstName ? "invalid-first-name" : null}
+                  />
+                  { errors.firstName && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                    </div>
+                  )}
+                </div>
+                {errors.firstName && <p className="text-red-500 font-medium text-sm">{errors.firstName.message}</p>}
               </div>
             </div>
           </form>
@@ -84,7 +91,7 @@ console.log(errors)
         
         <div className="mt-5 sm:mt-6 space-y-2">
           <span className="flex w-full rounded-md shadow-sm">
-            <button onClick={internalHandleSubmit} type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-emerald-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:border-emerald-700 focus:shadow-outline-emerald transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+            <button onClick={handleSubmit(internalHandleSubmit)} type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-emerald-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:border-emerald-700 focus:shadow-outline-emerald transition ease-in-out duration-150 sm:text-sm sm:leading-5">
               {submitText}              
             </button>
           </span>
