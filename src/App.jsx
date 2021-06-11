@@ -132,6 +132,7 @@ function App() {
         <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
           <PatientForm 
             onSubmit={createPatient.mutate}
+            resetMutation={createPatient.reset}
             clearOnSubmit
             setIsOpen={setIsOpen}
             submitText={

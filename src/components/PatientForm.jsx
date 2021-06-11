@@ -9,7 +9,7 @@ const defaultFormValues = {
   firstName: null,
 }
 
-const SignupSchema = yup.object().shape({
+const patientSchema = yup.object().shape({
   firstName: yup.string().required().label('First name')
 });
 
@@ -18,25 +18,29 @@ function PatientForm({
   initialValues = defaultFormValues,
   submitText,
   clearOnSubmit,
-  setIsOpen
+  setIsOpen,
+  resetMutation
 }) {  
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
-    resolver: yupResolver(SignupSchema)
+    resolver: yupResolver(patientSchema)
   });
   const [values, setValues] = React.useState(initialValues)
   const setValue = (field, value) =>
     setValues((old) => ({ ...old, [field]: value }))
 
-  const internalHandleSubmit = (e) => {
+  const internalHandleSubmit = async (e) => {
     if (clearOnSubmit) {
       setValues(defaultFormValues)
     }
-    // e.preventDefault()
-    onSubmit(values)
+
+    await onSubmit(values)
+    reset()
+    window.setTimeout(() => resetMutation(), 1500)
   }
 
   React.useEffect(() => {
@@ -74,8 +78,8 @@ function PatientForm({
                       {"focus:ring-emerald-500 focus:border-emerald-500 border-gray-300": !errors.firstName}, 
                       {"border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500": errors.firstName})
                     }
-                    aria-invalid={errors?.firstName}
-                    aria-describedby={errors?.firstName ? "invalid-first-name" : null}
+                    aria-invalid={errors.firstName ? "true" : "false"}
+                    aria-describedby={errors.firstName ? "invalid-first-name" : null}
                   />
                   { errors.firstName && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -83,7 +87,7 @@ function PatientForm({
                     </div>
                   )}
                 </div>
-                {errors.firstName && <p className="text-red-500 font-medium text-sm">{errors.firstName.message}</p>}
+                {errors.firstName && <p id="first-name-error" role="alert" className="mt-1 text-red-600 font-medium text-sm">{errors.firstName.message}</p>}
               </div>
             </div>
           </form>
