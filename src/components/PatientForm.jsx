@@ -4,9 +4,10 @@ import { ExclamationCircleIcon } from '@heroicons/react/solid'
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { DevTool } from "@hookform/devtools";
 
 const defaultFormValues = {
-  firstName: null,
+  firstName: '',
 }
 
 const patientSchema = yup.object().shape({
@@ -24,10 +25,12 @@ function PatientForm({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset
   } = useForm({
-    resolver: yupResolver(patientSchema)
+    resolver: yupResolver(patientSchema),
+    mode: "onChange"
   });
   const [values, setValues] = React.useState(initialValues)
   const setValue = (field, value) =>
@@ -48,7 +51,8 @@ function PatientForm({
   }, [initialValues])
   
   return (
-    <div>      
+    <div>    
+      {/* <DevTool control={control} placement={"top-right"} />    */}
       <div>
           <div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -58,7 +62,7 @@ function PatientForm({
 
           <form className="mt-6 sm:mt-5" 
             onSubmit={handleSubmit(internalHandleSubmit)} 
-            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(internalHandleSubmit(e))}} 
+            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(internalHandleSubmit)}} 
           >
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
