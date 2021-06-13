@@ -7,6 +7,7 @@ import { FormLabel, TextInput } from '../components/Common/FormControls'
 
 const defaultFormValues = {
   firstName: '',
+  lastName: ''
 }
 
 const patientSchema = yup.object().shape({
@@ -62,7 +63,7 @@ function PatientForm({
 
           <form className="mt-6 sm:mt-5" 
             onSubmit={handleSubmit(internalHandleSubmit)} 
-            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(internalHandleSubmit)}} 
+            onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(internalHandleSubmit(e))}} 
           >
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <FormLabel text="First Name" fieldName="firstName" />
@@ -80,13 +81,13 @@ function PatientForm({
         
         <div className="mt-5 sm:mt-6 space-y-2">
           <span className="flex w-full rounded-md shadow-sm">
-            <button onClick={handleSubmit(internalHandleSubmit)} type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-emerald-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:border-emerald-700 focus:shadow-outline-emerald transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+            <button onClick={handleSubmit(internalHandleSubmit)} type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-emerald-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
               {submitText}              
             </button>
           </span>
 
           <span className="flex w-full rounded-md shadow-sm">
-            <button onClick={() => setIsOpen(false)} type="button" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-white text-base leading-6 font-medium text-gray-500 shadow-sm hover:bg-gray-100 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+            <button onClick={() => setIsOpen(false)} type="button" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-white text-base leading-6 font-medium text-gray-500 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
               Cancel
             </button>
           </span>
