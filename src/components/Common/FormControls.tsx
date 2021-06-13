@@ -45,7 +45,7 @@ function TextInput({fieldName, value, formFieldErrors, autocomplete, register, s
         <input
           type="text"
           {...register(fieldName)}
-          id="first-name"
+          id={fieldKebab}
           autoComplete={autocomplete}
           onChange={(e) => setValue(fieldName, e.target.value)}
           value={value}
