@@ -21,8 +21,6 @@ function App() {
   const createPatient = useCreatePatient();  
   const updatePatient = useUpdatePatient();  
 
-console.log('ref', filterInput?.current?.value)
-console.log('qp', filter)
   //TODO Change modal open to XSTATE
   let [addModalIsOpen, setAddModalIsOpen] = useState(false);
   let [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
@@ -72,7 +70,7 @@ const submitFilter = useCallback(
                 href="/bff/login?returnUrl=/"
                 className="inline-block bg-emerald-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
               >
-                Login {filter}
+                Login
               </a>
             </div>
           </div>
