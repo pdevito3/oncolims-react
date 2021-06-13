@@ -6,17 +6,20 @@ import './index.css';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './apis/constants'
+import { ReactLocation } from 'react-location';
 
 const baseUrl = (document.getElementsByTagName('base')[0] || {}).href;
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename={baseUrl}>
-      <QueryClientProvider client={queryClient}>
-          <App />
-          <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <ReactLocation>
+      {/* <BrowserRouter basename={baseUrl}> */}
+        <QueryClientProvider client={queryClient}>
+            <App />
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      {/* </BrowserRouter> */}
+    </ReactLocation>
   </React.StrictMode>,
   document.getElementById('root'),
 );

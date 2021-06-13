@@ -4,6 +4,7 @@ import useCreatePatient from './apis/patients/useCreatePatient'
 import useUpdatePatient from './apis/patients/useUpdatePatient'
 import usePatient from './apis/patients/usePatient'
 import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
+import { SearchIcon, FilterIcon } from '@heroicons/react/solid'
 import Dialog from './components/Dialog';
 import PatientForm from './components/PatientForm';
 
@@ -35,7 +36,7 @@ function App() {
     <>
       <header className="bg-emerald-600">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
-          <div className="w-full py-6 flex items-center justify-between">
+          <div className="w-full py-3 flex items-center justify-between">
             <div className="flex items-center">
               <a href="#">
                 <span className="sr-only">Workflow</span>
@@ -58,23 +59,60 @@ function App() {
         </nav>
       </header>
       
+
+
     {
       patientListIsSuccess && 
       <div className="p-20">
         <div className="flex flex-col">
-          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
               <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <div className=" group w-full bg-emerald-500 h-10 px-6 flex items-center justify-between">
                   <p className="font-semibold text-white font-lg">
                     Patients
                   </p>
-                  <button 
-                    onClick={() => setAddModalIsOpen(true)}
-                    className="hidden text-white border border-white rounded hover:bg-white hover:text-emerald-500 transition-all duration-150 ease-in group-hover:block"
-                  >
-                      <PlusIcon className="w-5 h-5" />
-                  </button>
+
+                  <div className="flex-1 flex items-center justify-end space-x-3 opacity-0 group-hover:opacity-100 transition duration-150 ease-in">
+                    <div className="w-30 lg:w-64">
+                      <form className="flex" action="#">
+                        <div className="flex-1 min-w-0">
+                          <label htmlFor="filter" className="sr-only">
+                            Filter
+                          </label>
+                          <div className="relative rounded-md shadow-sm">
+                            <input
+                              type="filter"
+                              name="filter"
+                              id="filter"
+                              className="focus:ring-emerald-500 focus:border-emerald-500 block w-full pl-4 sm:text-sm border-gray-300 rounded-md py-1"
+                              placeholder="Filter"
+                            />
+                            <div className="absolute inset-y-0 right-1 flex items-center">
+                              <label htmlFor="filter" className="sr-only">
+                                Filter
+                              </label>
+                              <button
+                                type="submit"
+                                className="inline-flex justify-center p-1 shadow-sm text-sm font-medium rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 cursor-pointer"
+                              >
+                                <FilterIcon className="h-5 w-5" aria-hidden="true" />
+                                <span className="sr-only">Filter</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </form>
+                    </div>
+
+                    <button 
+                      onClick={() => setAddModalIsOpen(true)}
+                      className="text-white border border-white rounded hover:bg-white hover:text-emerald-500 transition duration-150 ease-in"
+                    >
+                        <PlusIcon className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
