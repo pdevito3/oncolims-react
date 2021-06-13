@@ -2,8 +2,24 @@ import React from 'react'
 import classNames from 'classnames'
 import { ExclamationCircleIcon } from '@heroicons/react/solid'
 import voca from 'voca';
+import { FieldValues, UseFormRegister, DeepMap, FieldError } from 'react-hook-form';
 
-function FormLabel({fieldName , text, className}){
+interface FormLabelProps {
+  fieldName: string
+  text: string
+  className: string
+}
+
+interface TextInputProps {
+  fieldName: string
+  value: string
+  formFieldErrors: DeepMap<FieldValues, FieldError>
+  autocomplete: "off" | "name" | "on" | "given-name" | "honorific-prefix"
+  register: UseFormRegister<FieldValues>
+  setValue: (field:string, value:string) => void
+}
+
+function FormLabel({fieldName , text, className}: FormLabelProps){
   let fieldKebab = voca.kebabCase(fieldName);
 
   return (
@@ -13,7 +29,14 @@ function FormLabel({fieldName , text, className}){
   )
 }
 
-function TextInput({fieldName, value, formFieldErrors, autocomplete, register, setValue}) {
+
+interface FormLabelProps {
+  fieldName: string
+  text: string
+  className: string
+}
+
+function TextInput({fieldName, value, formFieldErrors, autocomplete, register, setValue}: TextInputProps) {
   let fieldKebab = voca.kebabCase(fieldName);
 
   return (
@@ -32,7 +55,7 @@ function TextInput({fieldName, value, formFieldErrors, autocomplete, register, s
             {"border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500": formFieldErrors})
           }
           aria-invalid={formFieldErrors ? "true" : "false"}
-          aria-describedby={formFieldErrors ? `invalid-${fieldKebab}` : null}
+          aria-describedby={formFieldErrors ? `invalid-${fieldKebab}` : undefined}
         />
         { formFieldErrors && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
