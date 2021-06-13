@@ -1,6 +1,8 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import { usePatients, pagination } from './apis/patients/patients'
+import { usePatients, pagination } from './apis/patients/usePatientList'
 import useCreatePatient from './apis/patients/useCreatePatient'
+import useUpdatePatient from './apis/patients/useUpdatePatient'
+import usePatient from './apis/patients/usePatient'
 import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
 import Dialog from './components/Dialog';
 import PatientForm from './components/PatientForm';
@@ -8,16 +10,51 @@ import PatientForm from './components/PatientForm';
 function App() {
   //TODO Change pagenumber to XSTATE
   const [pageNumber, setPageNumber] = useState(1);
-  const {data: patients, isSuccess } = usePatients(pageNumber);
+  const [patientIdToEdit, setPatientIdToEdit] = useState(null);
+  const {data: patients, isSuccess: patientListIsSuccess } = usePatients(pageNumber);
+  const {data: patientRecord, isSuccess: patientRecordIsSuccess, isLoading: patientRecordIsLoading, refetch: refetchPatientRecord } = usePatient(patientIdToEdit);
   const createPatient = useCreatePatient();  
+  const updatePatient = useUpdatePatient();  
 
   //TODO Change modal open to XSTATE
-  let [isOpen, setIsOpen] = useState(false);
+  let [addModalIsOpen, setAddModalIsOpen] = useState(false);
+  let [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
+
+  function editPatient(patientId){
+    setPatientIdToEdit(patientId);
+    setUpdateModalIsOpen(true);
+    // refetchPatientRecord();
+  }
 
   return (
     <>
+      <header className="bg-emerald-600">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
+          <div className="w-full py-6 flex items-center justify-between">
+            <div className="flex items-center">
+              <a href="#">
+                <span className="sr-only">Workflow</span>
+                <img
+                  className="h-10 w-auto"
+                  src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
+                  alt=""
+                />
+              </a>
+            </div>
+            <div className="ml-10 space-x-4">
+              <a
+                href="/bff/login?returnUrl=/"
+                className="inline-block bg-emerald-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
+              >
+                Login
+              </a>
+            </div>
+          </div>
+        </nav>
+      </header>
+      
     {
-      isSuccess && 
+      patientListIsSuccess && 
       <div className="p-20">
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -28,10 +65,10 @@ function App() {
                     Patients
                   </p>
                   <button 
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => setAddModalIsOpen(true)}
                     className="hidden text-white border border-white rounded hover:bg-white hover:text-emerald-500 transition-all duration-150 ease-in group-hover:block"
                   >
-                      <PlusIcon className="w-4 h-4" />
+                      <PlusIcon className="w-5 h-5" />
                   </button>
                 </div>
                 <table className="min-w-full divide-y divide-gray-200">
@@ -71,7 +108,7 @@ function App() {
                       <tr key={patient.patientId} className="group bg-white even:bg-gray-50">
                         <td className="py-4 whitespace-nowrap text-left text-sm font-medium flex items-center justify-center">
                           <button 
-                            // onClick={() => setIsOpen(true)}
+                            onClick={() => editPatient(patient.patientId)}
                             className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block"
                           >
                               <PencilAltIcon className="w-5 h-5" /> 
@@ -129,12 +166,12 @@ function App() {
           </div>
         </nav>
       
-        <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Dialog isOpen={addModalIsOpen} setIsOpen={setAddModalIsOpen}>
           <PatientForm 
             onSubmit={createPatient.mutate}
             resetMutation={createPatient.reset}
             clearOnSubmit
-            setIsOpen={setIsOpen}
+            setIsOpen={setAddModalIsOpen}
             submitText={
               createPatient.isLoading
                 ? 'Saving...'
@@ -144,8 +181,33 @@ function App() {
                 ? 'Saved!'
                 : 'Create Patient'
             }
-          />          
+          />
         </Dialog>
+            
+        {
+          patientRecordIsLoading ? (
+            <span>Loading...</span>
+          ) : (
+            <Dialog isOpen={updateModalIsOpen} setIsOpen={setUpdateModalIsOpen}>
+            <PatientForm 
+              onSubmit={updatePatient.mutate}
+              resetMutation={updatePatient.reset}
+              clearOnSubmit
+              initialValues={patientRecord?.data}
+              setIsOpen={setUpdateModalIsOpen}
+              submitText={
+                updatePatient.isLoading
+                  ? 'Saving...'
+                  : updatePatient.isError
+                  ? 'Error!'
+                  : updatePatient.isSuccess
+                  ? 'Saved!'
+                  : 'Update Patient'
+              }
+            />            
+          </Dialog>
+          )
+        }
       </div>
     }
   </>
