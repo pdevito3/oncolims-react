@@ -1,17 +1,17 @@
 import React from 'react'
-import classNames from 'classnames'
-import { ExclamationCircleIcon } from '@heroicons/react/solid'
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { DevTool } from "@hookform/devtools";
+import { FormLabel, TextInput } from '../components/Common/FormControls'
 
 const defaultFormValues = {
   firstName: '',
 }
 
 const patientSchema = yup.object().shape({
-  firstName: yup.string().required().label('First name')
+  firstName: yup.string().required().label('First name'),
+  lastName: yup.string().label('Last name')
 });
 
 function PatientForm({
@@ -65,33 +65,14 @@ function PatientForm({
             onKeyDown={(e) => {if(e.key === "Enter") handleSubmit(internalHandleSubmit)}} 
           >
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                First Name
-              </label>
+              <FormLabel text="First Name" fieldName="firstName" />
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <div className="relative">
-                  <input
-                    type="text"
-                    {...register("firstName")}
-                    id="first-name"
-                    autoComplete="given-name"
-                    onChange={(e) => setValue('firstName', e.target.value)}
-                    value={values.firstName}
-                    className={classNames(
-                      "max-w-lg block w-full shadow-sm sm:max-w-xs sm:text-sm rounded-md", 
-                      {"focus:ring-emerald-500 focus:border-emerald-500 border-gray-300": !errors.firstName}, 
-                      {"border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500": errors.firstName})
-                    }
-                    aria-invalid={errors.firstName ? "true" : "false"}
-                    aria-describedby={errors.firstName ? "invalid-first-name" : null}
-                  />
-                  { errors.firstName && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-                    </div>
-                  )}
-                </div>
-                {errors.firstName && <p id="first-name-error" role="alert" className="mt-1 text-red-600 font-medium text-sm">{errors.firstName.message}</p>}
+                <TextInput fieldName="firstName" value={values.firstName} formFieldErrors={errors.firstName} autocomplete="given-name" register={register} setValue={setValue} />
+              </div>
+
+              <FormLabel text="Last Name" fieldName="lastName" />
+              <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <TextInput fieldName="lastName" value={values.lastName} formFieldErrors={errors.lastName} autocomplete="given-name" register={register} setValue={setValue} />
               </div>
             </div>
           </form>
