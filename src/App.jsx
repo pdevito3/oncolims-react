@@ -63,7 +63,7 @@ function App() {
 
     {
       patientListIsSuccess && 
-      <div className="p-20">
+      <div className="mt-10 max-w-7xl mx-auto">
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -73,8 +73,8 @@ function App() {
                     Patients
                   </p>
 
-                  <div className="flex-1 flex items-center justify-end space-x-3 opacity-0 group-hover:opacity-100 transition duration-150 ease-in">
-                    <div className="w-30 lg:w-64">
+                  <div className="flex-1 flex items-center justify-end space-x-3 transition duration-150 ease-in">
+                    <div className="w-30 lg:w-64 opacity-100">
                       <form className="flex" action="#">
                         <div className="flex-1 min-w-0">
                           <label htmlFor="filter" className="sr-only">
@@ -94,15 +94,14 @@ function App() {
                               </label>
                               <button
                                 type="submit"
-                                className="inline-flex justify-center p-1 shadow-sm text-sm font-medium rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 cursor-pointer"
+                                className="inline-flex justify-center p-1 shadow-sm text-sm font-medium rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 cursor-pointer transition duration-150 ease-in"
                               >
                                 <FilterIcon className="h-5 w-5" aria-hidden="true" />
                                 <span className="sr-only">Filter</span>
                               </button>
                             </div>
                           </div>
-                        </div>
-                        
+                        </div>                        
                       </form>
                     </div>
 
