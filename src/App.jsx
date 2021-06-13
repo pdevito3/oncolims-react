@@ -1,22 +1,28 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react';
 import { usePatients, pagination } from './apis/patients/usePatientList'
 import useCreatePatient from './apis/patients/useCreatePatient'
 import useUpdatePatient from './apis/patients/useUpdatePatient'
 import usePatient from './apis/patients/usePatient'
 import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
-import { SearchIcon, FilterIcon } from '@heroicons/react/solid'
+import { SearchIcon, FilterIcon, XCircleIcon } from '@heroicons/react/solid'
 import Dialog from './components/Dialog';
 import PatientForm from './components/PatientForm';
+import { useQueryParam, StringParam } from 'use-query-params';
+import { debounce } from 'lodash'
 
 function App() {
   //TODO Change pagenumber to XSTATE
   const [pageNumber, setPageNumber] = useState(1);
   const [patientIdToEdit, setPatientIdToEdit] = useState(null);
-  const {data: patients, isSuccess: patientListIsSuccess } = usePatients(pageNumber);
+  const filterInput = useRef(null);
+  const [filter, setFilter] = useQueryParam('filter', StringParam);
+  const {data: patients, isSuccess: patientListIsSuccess, refetch: refetchPatientList } = usePatients({pageNumber, filter});
   const {data: patientRecord, isSuccess: patientRecordIsSuccess, isLoading: patientRecordIsLoading, refetch: refetchPatientRecord } = usePatient(patientIdToEdit);
   const createPatient = useCreatePatient();  
   const updatePatient = useUpdatePatient();  
 
+console.log('ref', filterInput?.current?.value)
+console.log('qp', filter)
   //TODO Change modal open to XSTATE
   let [addModalIsOpen, setAddModalIsOpen] = useState(false);
   let [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
@@ -31,6 +37,20 @@ function App() {
       refetchPatientRecord(patientIdToEdit);
     }
   }, patientIdToEdit)
+
+const submitFilter = useCallback(
+  (filter) => {
+    if(filter?.length <= 0)
+      setFilter(undefined) // clears queryparam
+    
+    // setFilter(filter)
+    // if(filter === undefined)
+    //   filterInput.current.value 
+    
+      refetchPatientList({pageNumber, filter})      
+  },
+  [filter, pageNumber],
+)
 
   return (
     <>
@@ -52,7 +72,7 @@ function App() {
                 href="/bff/login?returnUrl=/"
                 className="inline-block bg-emerald-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
               >
-                Login
+                Login {filter}
               </a>
             </div>
           </div>
@@ -63,7 +83,7 @@ function App() {
 
     {
       patientListIsSuccess && 
-      <div className="mt-10 max-w-7xl mx-auto">
+      <div className="mt-10 px-10 max-w-7xl mx-auto">
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -75,13 +95,17 @@ function App() {
 
                   <div className="flex-1 flex items-center justify-end space-x-3 transition duration-150 ease-in">
                     <div className="w-30 lg:w-64 opacity-100">
-                      <form className="flex" action="#">
+                      <div className="flex">
                         <div className="flex-1 min-w-0">
                           <label htmlFor="filter" className="sr-only">
                             Filter
                           </label>
                           <div className="relative rounded-md shadow-sm">
                             <input
+                              onKeyDown={(e) => {if(e.key === "Enter") submitFilter(filterInput?.current?.value)}} 
+                              ref={filterInput}
+                              value={filter}
+                              onChange={(e) => setFilter(e.target.value)}
                               type="filter"
                               name="filter"
                               id="filter"
@@ -92,9 +116,10 @@ function App() {
                               <label htmlFor="filter" className="sr-only">
                                 Filter
                               </label>
+                              
                               <button
-                                type="submit"
-                                className="inline-flex justify-center p-1 shadow-sm text-sm font-medium rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 cursor-pointer transition duration-150 ease-in"
+                                onClick={() => submitFilter(filterInput?.current?.value)}
+                                className="inline-flex justify-center p-1 shadow-sm text-sm font-medium rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 cursor-pointer transition duration-100 ease-in"
                               >
                                 <FilterIcon className="h-5 w-5" aria-hidden="true" />
                                 <span className="sr-only">Filter</span>
@@ -102,7 +127,7 @@ function App() {
                             </div>
                           </div>
                         </div>                        
-                      </form>
+                      </div>
                     </div>
 
                     <button 
@@ -151,7 +176,7 @@ function App() {
                         <td className="py-4 whitespace-nowrap text-left text-sm font-medium flex items-center justify-center">
                           <button 
                             onClick={() => editPatient(patient.patientId)}
-                            className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block"
+                            className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block transition duration-100 ease-in"
                           >
                               <PencilAltIcon className="w-5 h-5" /> 
                           </button>

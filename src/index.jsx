@@ -1,25 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.jsx';
+import { BrowserRouter, Route } from 'react-router-dom';import App from './App.jsx';
 import './index.css';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './apis/constants'
 import { ReactLocation } from 'react-location';
+import { QueryParamProvider } from 'use-query-params';
 
 const baseUrl = (document.getElementsByTagName('base')[0] || {}).href;
 
 ReactDOM.render(
   <React.StrictMode>
-    <ReactLocation>
-      {/* <BrowserRouter basename={baseUrl}> */}
+    {/* <ReactLocation> */}
+      <BrowserRouter basename={baseUrl}>
+      <QueryParamProvider ReactRouterRoute={Route}>
         <QueryClientProvider client={queryClient}>
             <App />
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-      {/* </BrowserRouter> */}
-    </ReactLocation>
+      </QueryParamProvider>
+      </BrowserRouter>
+    {/* </ReactLocation> */}
   </React.StrictMode>,
   document.getElementById('root'),
 );

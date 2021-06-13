@@ -1,15 +1,27 @@
 ﻿import axios from 'axios';
 import { useQuery } from 'react-query';
 import { patientsBaseUrl, queryClient, patientKeys } from '../constants'
+import {
+    encodeQueryParams,
+    StringParam,
+    NumberParam,
+  } from 'serialize-query-params';
+  import { stringify } from 'query-string';
 
 const config = {
     headers: {}
 }
 
 export let pagination;
-const fetchPatients = async (pageNumber = 1, pageSize = 6) => {
-    let res = await axios.get(`${patientsBaseUrl}?pagesize=${pageSize}&pageNumber=${pageNumber}`, config);
+const fetchPatients = async ({pageNumber = 1, filter}) => {
+    let qp = encodeQueryParams(
+        {pageSize: NumberParam, pageNumber: NumberParam, filters: StringParam}, 
+        {pageSize: 6, pageNumber: pageNumber, ...(filter !== undefined) && {filters: `firstName@=*${filter}`}}
+    )
+    let queryParams = stringify(qp);
 
+    let res = await axios.get(`${patientsBaseUrl}?${queryParams}`, config);
+    
     // TODO move pagination to DTO body in api to cache the data
     pagination = JSON.parse(res.headers["x-pagination"]);
 
@@ -17,10 +29,10 @@ const fetchPatients = async (pageNumber = 1, pageSize = 6) => {
 }
 
 // TODO Update to infinite query to fetch next page automatically
-export function usePatients(pageNumber) {
+export function usePatients({pageNumber, filter}) {
     return useQuery(
         patientKeys.patients(pageNumber),
-        async () => fetchPatients(pageNumber),
+        async () => fetchPatients({pageNumber, filter}),
         {
             keepPreviousData: true,
             staleTime: Infinity,
