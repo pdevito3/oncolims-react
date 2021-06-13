@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react
 import { usePatients, pagination } from './apis/patients/usePatientList'
 import useCreatePatient from './apis/patients/useCreatePatient'
 import useUpdatePatient from './apis/patients/useUpdatePatient'
+import useDeletePatient from './apis/patients/useDeletePatient'
 import usePatient from './apis/patients/usePatient'
 import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
 import { SearchIcon, FilterIcon, XCircleIcon } from '@heroicons/react/solid'
@@ -20,6 +21,7 @@ function App() {
   const {data: patientRecord, isSuccess: patientRecordIsSuccess, isLoading: patientRecordIsLoading, refetch: refetchPatientRecord } = usePatient(patientIdToEdit);
   const createPatient = useCreatePatient();  
   const updatePatient = useUpdatePatient();  
+  const deletePatient = useDeletePatient();  
 
   //TODO Change modal open to XSTATE
   let [addModalIsOpen, setAddModalIsOpen] = useState(false);
@@ -40,10 +42,6 @@ const submitFilter = useCallback(
   (filter) => {
     if(filter?.length <= 0)
       setFilter(undefined) // clears queryparam
-    
-    // setFilter(filter)
-    // if(filter === undefined)
-    //   filterInput.current.value 
     
       refetchPatientList({pageNumber, filter})      
   },
@@ -139,7 +137,7 @@ const submitFilter = useCallback(
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="relative px-6 py-3 w-16">
+                      <th scope="col" className="relative px-6 py-3 w-20">
                         <span className="sr-only">Edit</span>
                       </th>
                       <th
@@ -172,12 +170,22 @@ const submitFilter = useCallback(
                     {patients.data.map((patient) => (
                       <tr key={patient.patientId} className="group bg-white even:bg-gray-50">
                         <td className="py-4 whitespace-nowrap text-left text-sm font-medium flex items-center justify-center">
-                          <button 
-                            onClick={() => editPatient(patient.patientId)}
-                            className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block transition duration-100 ease-in"
-                          >
-                              <PencilAltIcon className="w-5 h-5" /> 
-                          </button>
+                          <div className="flex space-x-2">
+                            <button 
+                              onClick={() => editPatient(patient.patientId)}
+                              className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block transition duration-100 ease-in"
+                            >
+                                <PencilAltIcon className="w-5 h-5" /> 
+                            </button>
+
+                            <button 
+                              onClick={() => deletePatient.mutate(patient.patientId)}
+                              className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block transition duration-100 ease-in"
+                            >
+                                <XCircleIcon className="w-5 h-5" /> 
+                            </button>
+
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{patient.firstName}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.lastName}</td>
