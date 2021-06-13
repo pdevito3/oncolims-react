@@ -5,7 +5,7 @@ import useUpdatePatient from './apis/patients/useUpdatePatient'
 import useDeletePatient from './apis/patients/useDeletePatient'
 import usePatient from './apis/patients/usePatient'
 import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
-import { SearchIcon, FilterIcon, XCircleIcon } from '@heroicons/react/solid'
+import { SearchIcon, FilterIcon, TrashIcon } from '@heroicons/react/solid'
 import Dialog from './components/Dialog';
 import PatientForm from './components/PatientForm';
 import { useQueryParam, StringParam } from 'use-query-params';
@@ -178,7 +178,7 @@ function humanDate(date){
                               onClick={() => deletePatient.mutate(patient.patientId)}
                               className="hidden text-emerald-600 hover:text-emerald-900 group-hover:block transition duration-100 ease-in"
                             >
-                                <XCircleIcon className="w-5 h-5" /> 
+                                <TrashIcon className="w-5 h-5" /> 
                             </button>
 
                           </div>
