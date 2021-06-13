@@ -23,8 +23,13 @@ function App() {
   function editPatient(patientId){
     setPatientIdToEdit(patientId);
     setUpdateModalIsOpen(true);
-    // refetchPatientRecord();
   }
+
+  useEffect(() => {
+    if(patientIdToEdit !== null && patientIdToEdit !== undefined) {
+      refetchPatientRecord(patientIdToEdit);
+    }
+  }, patientIdToEdit)
 
   return (
     <>

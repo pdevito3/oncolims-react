@@ -15,6 +15,6 @@ return useQuery(
     patientKeys.patient(patientId),
     async () => fetchPatient(patientId),
     {
-      //enabled: false // prevents it from running by default when it will be null
+      enabled: false // prevents it from running by default when it will be null
     }
 )}
