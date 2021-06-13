@@ -9,7 +9,7 @@ import { SearchIcon, FilterIcon, XCircleIcon } from '@heroicons/react/solid'
 import Dialog from './components/Dialog';
 import PatientForm from './components/PatientForm';
 import { useQueryParam, StringParam } from 'use-query-params';
-import { debounce } from 'lodash'
+import dayjs from 'dayjs'
 
 function App() {
   //TODO Change pagenumber to XSTATE
@@ -47,6 +47,14 @@ const submitFilter = useCallback(
   },
   [filter, pageNumber],
 )
+
+function humanDate(date){
+  console.log(date)
+  if(date === null || !dayjs(date).isValid)
+    return null
+
+  return dayjs(date).format("MMM DD, YYYY")
+}
 
   return (
     <>
@@ -140,29 +148,17 @@ const submitFilter = useCallback(
                       <th scope="col" className="relative px-6 py-3 w-20">
                         <span className="sr-only">Edit</span>
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Name
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        First Name
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Title
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Last Name
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Email
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        DOB
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Role
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Internal Id
                       </th>
                     </tr>
                   </thead>
@@ -189,7 +185,7 @@ const submitFilter = useCallback(
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{patient.firstName}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.lastName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.dob}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{humanDate(patient.dob)}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.internalId}</td>
                       </tr>
                     ))}
