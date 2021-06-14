@@ -1,17 +1,17 @@
 import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react';
-import { usePatients, pagination } from './apis/patients/usePatientList'
-import useCreatePatient from './apis/patients/useCreatePatient'
-import useUpdatePatient from './apis/patients/useUpdatePatient'
-import useDeletePatient from './apis/patients/useDeletePatient'
-import usePatient from './apis/patients/usePatient'
+import { usePatients, pagination } from '../../apis/patients/usePatientList'
+import useCreatePatient from '../../apis/patients/useCreatePatient'
+import useUpdatePatient from '../../apis/patients/useUpdatePatient'
+import useDeletePatient from '../../apis/patients/useDeletePatient'
+import usePatient from '../../apis/patients/usePatient'
 import { PencilAltIcon, PlusIcon } from '@heroicons/react/outline'
 import { SearchIcon, FilterIcon, TrashIcon } from '@heroicons/react/solid'
-import Dialog from './components/Dialog';
-import PatientForm from './components/PatientForm';
+import Dialog from '../Common/Dialog';
+import PatientForm from '../PatientForm';
 import { useQueryParam, StringParam } from 'use-query-params';
 import dayjs from 'dayjs'
 
-function App() {
+function Patients() {
   //TODO Change pagenumber to XSTATE
   const [pageNumber, setPageNumber] = useState(1);
   const [patientIdToEdit, setPatientIdToEdit] = useState(null);
@@ -58,36 +58,13 @@ function humanDate(date){
 
   return (
     <>
-      <header className="bg-emerald-600">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
-          <div className="w-full py-3 flex items-center justify-between">
-            <div className="flex items-center">
-              <a href="#">
-                <span className="sr-only">Workflow</span>
-                <img
-                  className="h-10 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
-                  alt=""
-                />
-              </a>
-            </div>
-            <div className="ml-10 space-x-4">
-              <a
-                href="/bff/login?returnUrl=/"
-                className="inline-block bg-emerald-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
-              >
-                Login
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
+
       
 
 
     {
       patientListIsSuccess && 
-      <div className="mt-10 px-10 max-w-7xl mx-auto">
+      <div className="">
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -198,7 +175,7 @@ function humanDate(date){
 
         {/* TODO - abstract out to a pagination component */}
         <nav
-          className="bg-white px-4 py-3 flex items-center justify-between sm:px-6"
+          className="bg-transparent px-4 py-3 flex items-center justify-between sm:px-6"
           aria-label="Pagination"
         >
           {
@@ -283,4 +260,4 @@ function humanDate(date){
   );
 }
 
-export default App;
+export default Patients;

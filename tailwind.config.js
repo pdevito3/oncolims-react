@@ -11,7 +11,11 @@ module.exports = {
       colors:{
         violet: colors.violet,
         emerald: colors.emerald,
-      }
+      },
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem',
+      },
     },
   },
   variants: {
